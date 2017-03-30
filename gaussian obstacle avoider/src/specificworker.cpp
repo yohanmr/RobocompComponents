@@ -1,5 +1,5 @@
 /*
- *    Copyright (C) 2017 by YOUR NAME HERE
+ *    Copyright (C) 2017 by Yohan M R
  *
  *    This file is part of RoboComp
  *
@@ -48,7 +48,7 @@ bool SpecificWorker::setParams(RoboCompCommonBehavior::ParameterList params)
 
 	return true;
 }
-float SpecificWorker::getcost(float x, float y, float angle, float fvar, float svar, float rvar)
+float SpecificWorker::getcost(float x, float y, float angle, float fvar, float svar, float rvar) //Gaussian function to calculate cost
 {
     float alpha= atan2(y,x) - angle + 1.57;
     alpha= atan2(sin(alpha), cos(alpha));
@@ -74,10 +74,11 @@ void SpecificWorker::compute( )
 
 
         float dist=ldata.front().dist;
-        if(ci<=8)
+        if(ci<=8) //Checking the cost in 8 separate directions at an angle of 45degrees
         {
         switch(ci)
         {
+            //X and Y are calculated wrt to the bot at the origin and (x,y) being the co-ordinates of the obstacle.
             case 1:{
                     ::x=0; ::y=dist;
                     break;
@@ -118,13 +119,13 @@ void SpecificWorker::compute( )
         if(mincost>SpecificWorker::getcost(::x,::y,0,0.2,(0.2/6),(0.2/6)))
         {
             mincost=SpecificWorker::getcost(::x,::y,0,0.2,(0.2/6),(0.2/6));
-            minangle=1.57*(0.25*(ci-1));
+            minangle=1.57*(0.25*(ci-1)); // Calculating angle at which it should move.
         }
         differentialrobot_proxy->setSpeedBase(0, 3.14/4*100);
         usleep(10000);
         ci++;
         }
-        else
+        else //Moving in the direction of minimum cost
         {
             ci=1;
             mincost=1;
